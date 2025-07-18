@@ -1,9 +1,19 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Heart, Star, Award } from "lucide-react";
 import heroImage from "@/assets/hero-wedding.jpg";
+import BookingDialog from "@/components/BookingDialog";
 
 const Hero = () => {
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+
+  const scrollToGallery = () => {
+    const gallerySection = document.getElementById('gallery');
+    if (gallerySection) {
+      gallerySection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image */}
@@ -41,6 +51,7 @@ const Hero = () => {
                 variant="chinese" 
                 size="lg" 
                 className="text-lg px-8 py-4 animate-glow"
+                onClick={() => setBookingDialogOpen(true)}
               >
                 立即咨询
               </Button>
@@ -48,6 +59,7 @@ const Hero = () => {
                 variant="elegant" 
                 size="lg" 
                 className="text-lg px-8 py-4 bg-white/10 border-white/30 text-white hover:bg-white/20"
+                onClick={scrollToGallery}
               >
                 查看案例
               </Button>
@@ -110,6 +122,12 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      {/* 预约对话框 */}
+      <BookingDialog
+        open={bookingDialogOpen}
+        onOpenChange={setBookingDialogOpen}
+      />
 
       {/* Decorative Elements */}
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white/50 animate-float">

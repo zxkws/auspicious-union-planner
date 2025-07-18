@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, Crown, Sparkles, Check } from "lucide-react";
+import BookingDialog from "@/components/BookingDialog";
 
 const Services = () => {
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState("");
   const services = [
     {
       title: "经典套餐",
@@ -119,6 +123,10 @@ const Services = () => {
                     variant={service.popular ? "chinese" : "elegant"} 
                     className="w-full"
                     size="lg"
+                    onClick={() => {
+                      setSelectedPackage(service.title);
+                      setBookingDialogOpen(true);
+                    }}
                   >
                     选择套餐
                   </Button>
@@ -132,11 +140,25 @@ const Services = () => {
           <p className="text-muted-foreground mb-6">
             所有套餐都可以根据您的需求进行个性化定制
           </p>
-          <Button variant="gold" size="lg">
+          <Button 
+            variant="gold" 
+            size="lg"
+            onClick={() => {
+              setSelectedPackage("定制方案");
+              setBookingDialogOpen(true);
+            }}
+          >
             联系我们定制专属方案
           </Button>
         </div>
       </div>
+
+      {/* 预约对话框 */}
+      <BookingDialog
+        open={bookingDialogOpen}
+        onOpenChange={setBookingDialogOpen}
+        selectedPackage={selectedPackage}
+      />
     </section>
   );
 };

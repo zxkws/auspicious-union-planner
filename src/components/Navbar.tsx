@@ -5,6 +5,7 @@ import BookingDialog from "@/components/BookingDialog";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
 
   const menuItems = [
     { name: "首页", href: "#home" },
@@ -35,11 +36,13 @@ const Navbar = () => {
                 {item.name}
               </a>
             ))}
-            <BookingDialog>
-              <Button variant="chinese" className="ml-4">
-                咨询预约
-              </Button>
-            </BookingDialog>
+            <Button 
+              variant="chinese" 
+              className="ml-4"
+              onClick={() => setBookingDialogOpen(true)}
+            >
+              咨询预约
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -73,16 +76,27 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="px-3 py-2">
-                <BookingDialog>
-                  <Button variant="chinese" className="w-full">
-                    咨询预约
-                  </Button>
-                </BookingDialog>
+                <Button 
+                  variant="chinese" 
+                  className="w-full"
+                  onClick={() => {
+                    setBookingDialogOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  咨询预约
+                </Button>
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* 预约对话框 */}
+      <BookingDialog
+        open={bookingDialogOpen}
+        onOpenChange={setBookingDialogOpen}
+      />
     </nav>
   );
 };

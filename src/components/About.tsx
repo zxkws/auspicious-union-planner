@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Users, Award, Heart, Star, BookOpen, Palette } from "lucide-react";
 import couplePortrait from "@/assets/couple-portrait.jpg";
+import BookingDialog from "@/components/BookingDialog";
 
 const About = () => {
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const stats = [
     { number: "500+", label: "成功案例", icon: Heart },
     { number: "10年", label: "专业经验", icon: Award },
@@ -165,10 +168,18 @@ const About = () => {
                 联系我们的专业团队，为您量身定制专属的汉式婚礼方案
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="chinese" size="lg">
+                <Button 
+                  variant="chinese" 
+                  size="lg"
+                  onClick={() => setBookingDialogOpen(true)}
+                >
                   立即咨询
                 </Button>
-                <Button variant="gold" size="lg">
+                <Button 
+                  variant="gold" 
+                  size="lg"
+                  onClick={() => setBookingDialogOpen(true)}
+                >
                   预约到店
                 </Button>
               </div>
@@ -176,6 +187,12 @@ const About = () => {
           </Card>
         </div>
       </div>
+
+      {/* 预约对话框 */}
+      <BookingDialog
+        open={bookingDialogOpen}
+        onOpenChange={setBookingDialogOpen}
+      />
     </section>
   );
 };

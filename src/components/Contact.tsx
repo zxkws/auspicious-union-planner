@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import BookingDialog from "@/components/BookingDialog";
 
 const Contact = () => {
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -245,11 +246,13 @@ const Contact = () => {
                         </div>
                       </div>
                       {action.title === "在线咨询" ? (
-                        <BookingDialog>
-                          <Button variant={action.variant} className="w-full">
-                            {action.buttonText}
-                          </Button>
-                        </BookingDialog>
+                        <Button 
+                          variant={action.variant} 
+                          className="w-full"
+                          onClick={() => setBookingDialogOpen(true)}
+                        >
+                          {action.buttonText}
+                        </Button>
                       ) : (
                         <Button variant={action.variant} className="w-full" onClick={() => window.open("tel:400-888-6666")}>
                           {action.buttonText}
@@ -276,6 +279,12 @@ const Contact = () => {
           </div>
         </div>
       </div>
+
+      {/* 预约对话框 */}
+      <BookingDialog
+        open={bookingDialogOpen}
+        onOpenChange={setBookingDialogOpen}
+      />
     </section>
   );
 };
