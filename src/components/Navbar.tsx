@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import BookingDialog from "@/components/BookingDialog";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,9 +35,11 @@ const Navbar = () => {
                 {item.name}
               </a>
             ))}
-            <Button variant="chinese" className="ml-4">
-              咨询预约
-            </Button>
+            <BookingDialog>
+              <Button variant="chinese" className="ml-4">
+                咨询预约
+              </Button>
+            </BookingDialog>
           </div>
 
           {/* Mobile Menu Button */}
@@ -70,9 +73,11 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="px-3 py-2">
-                <Button variant="chinese" className="w-full">
-                  咨询预约
-                </Button>
+                <BookingDialog>
+                  <Button variant="chinese" className="w-full">
+                    咨询预约
+                  </Button>
+                </BookingDialog>
               </div>
             </div>
           </div>

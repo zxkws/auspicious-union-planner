@@ -1,11 +1,51 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Calendar } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import BookingDialog from "@/components/BookingDialog";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    weddingDate: "",
+    budget: "",
+    message: ""
+  });
+  const { toast } = useToast();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.phone) {
+      toast({
+        title: "请填写必填信息",
+        description: "姓名和联系电话为必填项",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "咨询预约提交成功！",
+      description: "我们的专业顾问将在24小时内与您联系",
+    });
+    
+    setFormData({
+      name: "",
+      phone: "",
+      email: "",
+      weddingDate: "",
+      budget: "",
+      message: ""
+    });
+  };
   const contactInfo = [
     {
       icon: MapPin,
@@ -76,57 +116,88 @@ const Contact = () => {
                   填写下方表单，我们的专业顾问将在24小时内与您联系
                 </p>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">姓名 *</Label>
-                    <Input id="name" placeholder="请输入您的姓名" />
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">姓名 *</Label>
+                      <Input 
+                        id="name" 
+                        value={formData.name}
+                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        placeholder="请输入您的姓名" 
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">联系电话 *</Label>
+                      <Input 
+                        id="phone" 
+                        value={formData.phone}
+                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                        placeholder="请输入您的联系电话" 
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">联系电话 *</Label>
-                    <Input id="phone" placeholder="请输入您的联系电话" />
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">邮箱</Label>
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        value={formData.email}
+                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        placeholder="请输入您的邮箱" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="date">期望婚期</Label>
+                      <Input 
+                        id="date" 
+                        type="date" 
+                        value={formData.weddingDate}
+                        onChange={(e) => setFormData(prev => ({ ...prev, weddingDate: e.target.value }))}
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="email">邮箱</Label>
-                    <Input id="email" type="email" placeholder="请输入您的邮箱" />
+                    <Label>预算范围</Label>
+                    <Select value={formData.budget} onValueChange={(value) => setFormData(prev => ({ ...prev, budget: value }))}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="请选择预算范围" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1-3">1-3万</SelectItem>
+                        <SelectItem value="3-5">3-5万</SelectItem>
+                        <SelectItem value="5-10">5-10万</SelectItem>
+                        <SelectItem value="10+">10万以上</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="date">期望婚期</Label>
-                    <Input id="date" type="date" />
+                    <Label htmlFor="message">需求描述</Label>
+                    <Textarea
+                      id="message"
+                      value={formData.message}
+                      onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                      placeholder="请描述您对汉式婚礼的具体需求和想法..."
+                      rows={4}
+                    />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="budget">预算范围</Label>
-                  <select className="w-full p-3 border border-input rounded-md bg-background">
-                    <option value="">请选择预算范围</option>
-                    <option value="1-3">1-3万</option>
-                    <option value="3-5">3-5万</option>
-                    <option value="5-10">5-10万</option>
-                    <option value="10+">10万以上</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="message">需求描述</Label>
-                  <Textarea
-                    id="message"
-                    placeholder="请描述您对汉式婚礼的具体需求和想法..."
-                    rows={4}
-                  />
-                </div>
-
-                <div className="flex gap-4">
-                  <Button variant="chinese" size="lg" className="flex-1">
-                    提交咨询
-                  </Button>
-                  <Button variant="elegant" size="lg" className="flex-1">
-                    电话咨询
-                  </Button>
-                </div>
+                  <div className="flex gap-4">
+                    <Button type="submit" variant="chinese" size="lg" className="flex-1">
+                      提交咨询
+                    </Button>
+                    <Button type="button" variant="elegant" size="lg" className="flex-1" onClick={() => window.open("tel:400-888-6666")}>
+                      电话咨询
+                    </Button>
+                  </div>
+                </form>
               </CardContent>
             </Card>
           </div>
@@ -173,9 +244,17 @@ const Contact = () => {
                           <p className="text-sm text-muted-foreground">{action.description}</p>
                         </div>
                       </div>
-                      <Button variant={action.variant} className="w-full">
-                        {action.buttonText}
-                      </Button>
+                      {action.title === "在线咨询" ? (
+                        <BookingDialog>
+                          <Button variant={action.variant} className="w-full">
+                            {action.buttonText}
+                          </Button>
+                        </BookingDialog>
+                      ) : (
+                        <Button variant={action.variant} className="w-full" onClick={() => window.open("tel:400-888-6666")}>
+                          {action.buttonText}
+                        </Button>
+                      )}
                     </CardContent>
                   </Card>
                 );

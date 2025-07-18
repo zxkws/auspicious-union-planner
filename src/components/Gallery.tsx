@@ -1,12 +1,18 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Heart, Calendar } from "lucide-react";
+import CaseDetailDialog from "@/components/CaseDetailDialog";
 import couplePortrait from "@/assets/couple-portrait.jpg";
 import weddingDecor from "@/assets/wedding-decor.jpg";
 import heroImage from "@/assets/hero-wedding.jpg";
 
 const Gallery = () => {
+  const [selectedCategory, setSelectedCategory] = useState("全部");
+  const [selectedCase, setSelectedCase] = useState<any>(null);
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+
   const cases = [
     {
       id: 1,
@@ -72,6 +78,19 @@ const Gallery = () => {
 
   const categories = ["全部", "经典套餐", "尊贵套餐", "至尊套餐"];
 
+  const filteredCases = selectedCategory === "全部" 
+    ? cases 
+    : cases.filter(caseItem => caseItem.category === selectedCategory);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  const handleViewDetails = (caseItem: any) => {
+    setSelectedCase(caseItem);
+    setDetailDialogOpen(true);
+  };
+
   return (
     <section id="gallery" className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,8 +110,10 @@ const Gallery = () => {
             {categories.map((category) => (
               <Button
                 key={category}
-                variant={category === "全部" ? "chinese" : "elegant"}
+                variant={category === selectedCategory ? "chinese" : "elegant"}
                 size="sm"
+                onClick={() => handleCategoryChange(category)}
+                className={category === selectedCategory ? "" : "hover:bg-primary/10"}
               >
                 {category}
               </Button>
@@ -102,7 +123,7 @@ const Gallery = () => {
 
         {/* Gallery Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {cases.map((caseItem, index) => (
+          {filteredCases.map((caseItem, index) => (
             <Card 
               key={caseItem.id} 
               className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
@@ -127,7 +148,11 @@ const Gallery = () => {
                           <span className="text-sm">{caseItem.views}</span>
                         </div>
                       </div>
-                      <Button variant="chinese" size="sm">
+                      <Button 
+                        variant="chinese" 
+                        size="sm"
+                        onClick={() => handleViewDetails(caseItem)}
+                      >
                         查看详情
                       </Button>
                     </div>
@@ -160,6 +185,13 @@ const Gallery = () => {
           </Button>
         </div>
       </div>
+
+      {/* 案例详情对话框 */}
+      <CaseDetailDialog
+        case={selectedCase}
+        open={detailDialogOpen}
+        onOpenChange={setDetailDialogOpen}
+      />
     </section>
   );
 };
